@@ -1,6 +1,6 @@
 from XMSS import *
 import hashlib
-import sys
+import time
 import json
 
 
@@ -10,15 +10,29 @@ def XMSS_demo(messages: List[bytearray]):
     msg_len = len(messages[0]) // 2
     w = 16
 
+    start_time = time.time()
     keyPair = XMSS_keyGen(height, msg_len, w)
+    end_time = time.time()
+    keypairgentime = end_time - start_time
+    print("KEY PAIR GENERATION TIME in seconds IS ", keypairgentime)
+
 
     addressXMSS = ADRS()
 
     signatures = []
+    xmss_times = []
+
 
     for message in messages:
+        print(message)
+        start_time = time.time()
         signature = XMSS_sign(message, keyPair.SK, w, addressXMSS, height)
+        print("SIGNATURE IS ", str(signature.sig))
+        end_time = time.time()
+        sign_generation_time = end_time - start_time
+        xmss_times.append(sign_generation_time)
         signatures.append(signature)
+    print("XMSS Signature Generation Times (seconds):", xmss_times)
 
     ifProved = True
 
@@ -82,4 +96,5 @@ if __name__ == '__main__':
     sha256_digest = hashlib.sha256(json_string.encode()).digest()
     byte_array_data = bytearray(sha256_digest)
     print("_" * 40)
+    overhead_data1 = byte_array_data
     XMSS_demo([byte_array_data])

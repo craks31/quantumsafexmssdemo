@@ -95,6 +95,8 @@ def XMSS_keyGen(height: int, n: int, w: int in {4, 16}) -> XMSSKeypair:
     PK.SEED = SEED
 
     KeyPair = XMSSKeypair(SK, PK)
+    print("KeyPair generated, ")
+    print("public key is "+str(PK.OID))
     return KeyPair
 
 
